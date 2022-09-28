@@ -1,47 +1,43 @@
 package com.example.suas_ps;
 
-import androidx.annotation.NonNull;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.LinearLayout;
+
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.os.Bundle;
-import android.view.MenuItem;
+public class DashboardActivity extends AppCompatActivity {
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-
-public class DashboardActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
-
-    BottomNavigationView bottomNavigationView;
+    LinearLayout createService, complains, eventRequest, productListing, giveaways;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
-        bottomNavigationView = findViewById(R.id.bottomNavigationView);
 
-        bottomNavigationView.setOnNavigationItemSelectedListener(this);
-        bottomNavigationView.setSelectedItemId(R.id.request);
+        initComponent();
+
+        onClickMethod(createService, CreateServiceActivity.class);
+        onClickMethod(complains, ComplaintsActivity.class);
+        onClickMethod(eventRequest, EventRequestActivity.class);
+        onClickMethod(productListing, ProductListingActivity.class);
+        onClickMethod(giveaways, GiveawaysActivity.class);
 
     }
-    RequestFragment requestFragment = new RequestFragment();
-    HistoryFragment historyFragment = new HistoryFragment();
-    ProfileFragment profileFragment = new ProfileFragment();
 
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
-        switch (item.getItemId()) {
-            case R.id.request:
-                getSupportFragmentManager().beginTransaction().replace(R.id.container, requestFragment).commit();
-                return true;
-
-            case R.id.history:
-                getSupportFragmentManager().beginTransaction().replace(R.id.container, historyFragment).commit();
-                return true;
-
-            case R.id.profile:
-                getSupportFragmentManager().beginTransaction().replace(R.id.container, profileFragment).commit();
-                return true;
-        }
-        return false;
+    private void onClickMethod(View view, Class<?> destination) {
+        view.setOnClickListener(view1 -> {
+            startActivity(new Intent(this, destination));
+        });
     }
+
+    private void initComponent() {
+        createService = findViewById(R.id.createService);
+        complains = findViewById(R.id.complains);
+        eventRequest = findViewById(R.id.eventRequest);
+        productListing = findViewById(R.id.productListing);
+        giveaways = findViewById(R.id.giveaways);
+    }
+
 }

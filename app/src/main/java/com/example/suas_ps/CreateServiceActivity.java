@@ -1,58 +1,47 @@
 package com.example.suas_ps;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
 import android.provider.MediaStore;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
 
 import es.dmoral.toasty.Toasty;
 
-public class RequestFragment extends Fragment {
+public class CreateServiceActivity extends AppCompatActivity {
     private static final int CAMERA_REQUEST = 1888;
 
-    private EditText roomEditText, contactEditText, descriptionEditText;
+    private EditText roomEditText, contactEditText, descriptionEditText, titleEditText, dormEditText;
     private ImageButton addImageOrVideo;
     private Button submitButton;
 
@@ -72,36 +61,20 @@ public class RequestFragment extends Fragment {
     ProgressDialog progressDialog;
     ImageView image;
 
-
-    public RequestFragment() {
-        // Required empty public constructor
-    }
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_request, container, false);
-        roomEditText = view.findViewById(R.id.roomEditText);
-        contactEditText = view.findViewById(R.id.contactEditText);
-        descriptionEditText = view.findViewById(R.id.descriptionEditText);
-        addImageOrVideo = view.findViewById(R.id.addImageOrVideo);
-        submitButton = view.findViewById(R.id.submitButton);
-        image = view.findViewById(R.id.image);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_create_service);
         initViews();
-        mAuth = FirebaseAuth.getInstance();
-        firebaseFirestore = FirebaseFirestore.getInstance();
-        user = mAuth.getCurrentUser();
-
 
         submitButton.setOnClickListener(view1 -> {
-            if (roomEditText.getText().toString().isEmpty() || contactEditText.getText().toString().isEmpty() || descriptionEditText.getText().toString().isEmpty()) {
-                Toasty.error(getContext(), "Please Fill All THe fields above First.", Toast.LENGTH_LONG, true).show();
+            if (dormEditText.getText().toString().isEmpty() || titleEditText.getText().toString().isEmpty() || roomEditText.getText().toString().isEmpty() || contactEditText.getText().toString().isEmpty() || descriptionEditText.getText().toString().isEmpty()) {
+                Toasty.error(this, "Please Fill All THe fields above First.", Toast.LENGTH_LONG, true).show();
                 return;
             }
 
             if (picSelected == 0) {
-                Toasty.error(getContext(), "Please Select A Image First.", Toast.LENGTH_LONG, true).show();
+                Toasty.error(this, "Please Select A Image First.", Toast.LENGTH_LONG, true).show();
                 return;
             }
 
@@ -111,21 +84,27 @@ public class RequestFragment extends Fragment {
             uploadImageFirst();
         });
 
-        return view;
+        addImageOrVideo.setOnClickListener(v -> {
+            Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            startActivityForResult(cameraIntent, CAMERA_REQUEST);
+        });
     }
 
     private void initViews() {
+        titleEditText = findViewById(R.id.titleEditText);
+        dormEditText = findViewById(R.id.dormEditText);
+        roomEditText = findViewById(R.id.roomEditText);
+        contactEditText = findViewById(R.id.contactEditText);
+        descriptionEditText = findViewById(R.id.descriptionEditText);
+        addImageOrVideo = findViewById(R.id.addImageOrVideo);
+        submitButton = findViewById(R.id.submitButton);
+        image = findViewById(R.id.image);
+        mAuth = FirebaseAuth.getInstance();
+        firebaseFirestore = FirebaseFirestore.getInstance();
+        user = mAuth.getCurrentUser();
 
-        progressDialog = new ProgressDialog(getContext());
+        progressDialog = new ProgressDialog(this);
 
-        addImageOrVideo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d("TAG", "onClick: ");
-                Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(cameraIntent, CAMERA_REQUEST);
-            }
-        });
 
     }
 
@@ -169,6 +148,8 @@ public class RequestFragment extends Fragment {
     private void uploadDataToDatabase() {
         Date currentTime = Calendar.getInstance().getTime();
         HashMap Data = new HashMap();
+        Data.put("title", titleEditText.getText().toString());
+        Data.put("dorm_no", dormEditText.getText().toString());
         Data.put("room_no", roomEditText.getText().toString());
         Data.put("contact_no", contactEditText.getText().toString());
         Data.put("service_image", imageUrl);
@@ -180,9 +161,13 @@ public class RequestFragment extends Fragment {
         mDatabaseForProductUploading.child(roomEditText.getText().toString()).updateChildren(Data).addOnSuccessListener(new OnSuccessListener() {
             @Override
             public void onSuccess(Object o) {
-                Toasty.success(getContext(), "Request Submitted Successfully", Toast.LENGTH_LONG, true).show();
+                Toasty.success(CreateServiceActivity.this, "Request Submitted Successfully", Toast.LENGTH_LONG, true).show();
                 roomEditText.clearFocus();
                 roomEditText.setText("");
+                titleEditText.clearFocus();
+                titleEditText.setText("");
+                dormEditText.clearFocus();
+                dormEditText.setText("");
                 contactEditText.clearFocus();
                 contactEditText.setText("");
                 descriptionEditText.clearFocus();
@@ -197,18 +182,18 @@ public class RequestFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CAMERA_REQUEST) {
             Bitmap photo = (Bitmap) data.getExtras().get("data");
-            resultUri = getImageUri(getContext(), photo);
+            resultUri = getImageUri(this, photo);
             image.setImageBitmap(photo);
             picSelected = 1;
 
         }
     }
+
     public Uri getImageUri(Context inContext, Bitmap inImage) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
         String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
         return Uri.parse(path);
     }
-
 
 }
