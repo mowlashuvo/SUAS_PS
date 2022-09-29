@@ -12,16 +12,19 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".CompletedActivity"
+            android:name=".complaints.CreateComplaintActivity"
             android:exported="false" />
         <activity
-            android:name=".WorkingActivity"
+            android:name=".service_request.CompletedActivity"
             android:exported="false" />
         <activity
-            android:name=".PendingActivity"
+            android:name=".service_request.WorkingActivity"
             android:exported="false" />
         <activity
-            android:name=".ServiceRequestActivity"
+            android:name=".service_request.PendingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".service_request.ServiceRequestActivity"
             android:exported="false" />
         <activity
             android:name=".GiveawaysActivity"
@@ -33,10 +36,10 @@
             android:name=".EventRequestActivity"
             android:exported="false" />
         <activity
-            android:name=".ComplaintsActivity"
+            android:name=".complaints.ComplaintsActivity"
             android:exported="false" />
         <activity
-            android:name=".CreateServiceActivity"
+            android:name=".service_request.CreateServiceActivity"
             android:exported="false" />
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"

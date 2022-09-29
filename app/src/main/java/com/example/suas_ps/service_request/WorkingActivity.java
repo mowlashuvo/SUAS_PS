@@ -1,4 +1,4 @@
-package com.example.suas_ps;
+package com.example.suas_ps.service_request;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,6 +10,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
+import com.example.suas_ps.Constants;
+import com.example.suas_ps.R;
+import com.example.suas_ps.ServiceRequestAdapter;
+import com.example.suas_ps.ServiceRequestModel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -22,7 +26,7 @@ import com.wang.avi.AVLoadingIndicatorView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PendingActivity extends AppCompatActivity {
+public class WorkingActivity extends AppCompatActivity {
     DatabaseReference databaseReference;
     List<ServiceRequestModel> list = new ArrayList<>();
 
@@ -38,7 +42,7 @@ public class PendingActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_pending);
+        setContentView(R.layout.activity_working);
 
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
@@ -76,7 +80,7 @@ public class PendingActivity extends AppCompatActivity {
                     String current_time = d.child("current_time").getValue().toString();
 
                     if (user.getUid().equals(user_id)){
-                        if (status.equals(Constants.PENDING_STATUS)){
+                        if (status.equals(Constants.WORKING_STATUS)){
                             list.add(new ServiceRequestModel(room_no, contact_no, description, service_image, status, current_time));
                         }
                     }

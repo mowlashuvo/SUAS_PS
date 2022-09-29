@@ -49,5 +49,7 @@
     <string name="title">Title</string>
     <string name="dorm">Dorm</string>
     <string name="complaint">Complaint</string>
+    <string name="create_complaint">Create Complaint</string>
+    <string name="action">Action</string>
 
 </resources>

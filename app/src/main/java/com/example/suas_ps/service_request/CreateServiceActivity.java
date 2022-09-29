@@ -1,4 +1,4 @@
-package com.example.suas_ps;
+package com.example.suas_ps.service_request;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,6 +17,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.suas_ps.Constants;
+import com.example.suas_ps.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -36,7 +38,7 @@ import java.util.HashMap;
 
 import es.dmoral.toasty.Toasty;
 
-public class ComplaintsActivity extends AppCompatActivity {
+public class CreateServiceActivity extends AppCompatActivity {
     private static final int CAMERA_REQUEST = 1888;
 
     private EditText roomEditText, contactEditText, descriptionEditText, titleEditText, dormEditText;
@@ -58,10 +60,11 @@ public class ComplaintsActivity extends AppCompatActivity {
 
     ProgressDialog progressDialog;
     ImageView image;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_complaints);
+        setContentView(R.layout.activity_create_service);
         initViews();
 
         submitButton.setOnClickListener(view1 -> {
@@ -75,7 +78,7 @@ public class ComplaintsActivity extends AppCompatActivity {
                 return;
             }
 
-            mDatabaseForProductUploading = FirebaseDatabase.getInstance().getReference().child("complaints_request");
+            mDatabaseForProductUploading = FirebaseDatabase.getInstance().getReference().child("service_request");
             key = mDatabaseForProductUploading.push().getKey();
 
             uploadImageFirst();
@@ -158,7 +161,7 @@ public class ComplaintsActivity extends AppCompatActivity {
         mDatabaseForProductUploading.child(roomEditText.getText().toString()).updateChildren(Data).addOnSuccessListener(new OnSuccessListener() {
             @Override
             public void onSuccess(Object o) {
-                Toasty.success(ComplaintsActivity.this, "Complaint Submitted Successfully", Toast.LENGTH_LONG, true).show();
+                Toasty.success(CreateServiceActivity.this, "Request Submitted Successfully", Toast.LENGTH_LONG, true).show();
                 roomEditText.clearFocus();
                 roomEditText.setText("");
                 titleEditText.clearFocus();

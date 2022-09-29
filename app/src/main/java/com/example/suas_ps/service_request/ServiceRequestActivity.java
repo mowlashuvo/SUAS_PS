@@ -1,7 +1,6 @@
-package com.example.suas_ps;
+package com.example.suas_ps.service_request;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -10,6 +9,12 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
+
+import com.example.suas_ps.R;
+import com.example.suas_ps.service_request.CompletedActivity;
+import com.example.suas_ps.service_request.CreateServiceActivity;
+import com.example.suas_ps.service_request.PendingActivity;
+import com.example.suas_ps.service_request.WorkingActivity;
 
 public class ServiceRequestActivity extends AppCompatActivity {
     LinearLayout pendingLL, workingLL, completedLL, createService;

@@ -1,4 +1,4 @@
-package com.example.suas_ps;
+package com.example.suas_ps.complaints;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -11,14 +11,14 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.suas_ps.Constants;
+import com.example.suas_ps.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -27,9 +27,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Calendar;
@@ -38,7 +36,7 @@ import java.util.HashMap;
 
 import es.dmoral.toasty.Toasty;
 
-public class CreateServiceActivity extends AppCompatActivity {
+public class CreateComplaintActivity extends AppCompatActivity {
     private static final int CAMERA_REQUEST = 1888;
 
     private EditText roomEditText, contactEditText, descriptionEditText, titleEditText, dormEditText;
@@ -51,20 +49,19 @@ public class CreateServiceActivity extends AppCompatActivity {
     private String userID;
 
 
-    String key;
-    DatabaseReference mDatabaseForProductUploading;
+    private String key;
+    private DatabaseReference mDatabaseForProductUploading;
 
-    Uri resultUri;
-    int picSelected = 0;
-    String imageUrl;
+    private Uri resultUri;
+    private int picSelected = 0;
+    private String imageUrl;
 
-    ProgressDialog progressDialog;
-    ImageView image;
-
+    private ProgressDialog progressDialog;
+    private ImageView image;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_service);
+        setContentView(R.layout.activity_create_complaint);
         initViews();
 
         submitButton.setOnClickListener(view1 -> {
@@ -78,7 +75,7 @@ public class CreateServiceActivity extends AppCompatActivity {
                 return;
             }
 
-            mDatabaseForProductUploading = FirebaseDatabase.getInstance().getReference().child("service_request");
+            mDatabaseForProductUploading = FirebaseDatabase.getInstance().getReference().child("complaints_request");
             key = mDatabaseForProductUploading.push().getKey();
 
             uploadImageFirst();
@@ -115,27 +112,17 @@ public class CreateServiceActivity extends AppCompatActivity {
         progressDialog.show();
 
         final StorageReference Submit_Datareference = FirebaseStorage.getInstance().getReference(roomEditText.getText().toString()).child(key);
-        Submit_Datareference.putFile(resultUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                Submit_Datareference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                    @Override
-                    public void onSuccess(Uri uri) {
-                        //imagesUrl.add(uri.toString());
-                        progressDialog.dismiss();
-                        imageUrl = uri.toString();
+        Submit_Datareference.putFile(resultUri).addOnSuccessListener(taskSnapshot ->
+                Submit_Datareference.getDownloadUrl().addOnSuccessListener(uri -> {
+            //imagesUrl.add(uri.toString());
+            progressDialog.dismiss();
+            imageUrl = uri.toString();
 
-                        uploadDataToDatabase();
+            uploadDataToDatabase();
 
-                    }
-                });
-            }
-        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
-                //Dialog.Set_Percetage((int) progress);
-            }
+        })).addOnProgressListener(taskSnapshot -> {
+            double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+            //Dialog.Set_Percetage((int) progress);
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
@@ -161,7 +148,7 @@ public class CreateServiceActivity extends AppCompatActivity {
         mDatabaseForProductUploading.child(roomEditText.getText().toString()).updateChildren(Data).addOnSuccessListener(new OnSuccessListener() {
             @Override
             public void onSuccess(Object o) {
-                Toasty.success(CreateServiceActivity.this, "Request Submitted Successfully", Toast.LENGTH_LONG, true).show();
+                Toasty.success(CreateComplaintActivity.this, "Complaint Submitted Successfully", Toast.LENGTH_LONG, true).show();
                 roomEditText.clearFocus();
                 roomEditText.setText("");
                 titleEditText.clearFocus();

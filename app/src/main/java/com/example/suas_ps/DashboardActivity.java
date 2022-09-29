@@ -7,6 +7,9 @@ import android.widget.LinearLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.suas_ps.complaints.ComplaintsActivity;
+import com.example.suas_ps.service_request.ServiceRequestActivity;
+
 public class DashboardActivity extends AppCompatActivity {
 
     LinearLayout createService, complains, eventRequest, productListing, giveaways;
