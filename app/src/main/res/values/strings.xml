@@ -40,7 +40,7 @@
     <string name="login_text">Login</string>
     <string name="passwordHint">Password</string>
     <string name="nameHint">Name</string>
-    <string name="create_service">Create Service</string>
+    <string name="create_service">Service Request</string>
     <string name="complaints">Complaints</string>
     <string name="event_request">Event Request</string>
     <string name="product_listings">Product Listings</string>

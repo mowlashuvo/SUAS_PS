@@ -18,7 +18,7 @@ public class DashboardActivity extends AppCompatActivity {
 
         initComponent();
 
-        onClickMethod(createService, CreateServiceActivity.class);
+        onClickMethod(createService, ServiceRequestActivity.class);
         onClickMethod(complains, ComplaintsActivity.class);
         onClickMethod(eventRequest, EventRequestActivity.class);
         onClickMethod(productListing, ProductListingActivity.class);

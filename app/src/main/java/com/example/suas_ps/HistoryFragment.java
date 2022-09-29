@@ -59,53 +59,10 @@ public class HistoryFragment extends Fragment {
         adapter = new ServiceRequestAdapter(getActivity(), list);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(),1));
-        getData();
+//        getData();
         return view;
     }
 
-    private void getData(){
-//        progressDialog = new ProgressDialog(getContext());
-//        progressDialog.setTitle("Updating Data");
-//        progressDialog.setMessage("Please Wait while updating data");
-//        progressDialog.show();
-
-        databaseReference = FirebaseDatabase.getInstance().getReference().child("service_request");
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                list.clear();
-
-                for (DataSnapshot d: dataSnapshot.getChildren()){
-
-                    String room_no = d.child("room_no").getValue().toString();
-                    String contact_no = d.child("contact_no").getValue().toString();
-                    String service_image = d.child("service_image").getValue().toString();
-                    String description = d.child("description").getValue().toString();
-                    String user_id = d.child("user_id").getValue().toString();
-                    String status = d.child("status").getValue().toString();
-                    String current_time = d.child("current_time").getValue().toString();
-
-                    if (user.getUid().equals(user_id)){
-                        list.add(new ServiceRequestModel(room_no, contact_no, description, service_image, status, current_time));
-                    }
-                }
-                if (list.size()==0){
-                    noData.setVisibility(View.VISIBLE);
-                } else {
-                    noData.setVisibility(View.GONE);
-                }
-                avi.setVisibility(View.GONE);
-                adapter.notifyDataSetChanged();
-//                progressDialog.dismiss();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
 
 
 }

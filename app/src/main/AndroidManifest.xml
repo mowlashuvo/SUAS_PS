@@ -12,6 +12,18 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".CompletedActivity"
+            android:exported="false" />
+        <activity
+            android:name=".WorkingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".PendingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ServiceRequestActivity"
+            android:exported="false" />
+        <activity
             android:name=".GiveawaysActivity"
             android:exported="false" />
         <activity
